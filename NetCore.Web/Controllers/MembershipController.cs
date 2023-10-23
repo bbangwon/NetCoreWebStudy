@@ -1,9 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NetCore.Data.ViewModels;
+using NetCore.Services.Interfaces;
 
 namespace NetCore.Web.Controllers
 {
     public class MembershipController : Controller
     {
+        private IUser _user;
+
+        public MembershipController(IUser user)
+        {
+            _user = user;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -18,15 +27,12 @@ namespace NetCore.Web.Controllers
         [HttpPost]        
         [ValidateAntiForgeryToken]
         //위조방지토큰을 통해 View로부터 받은 Post Data가 유효한지 검증합니다.
-        public IActionResult Login(Models.LoginInfo loginInfo)
+        public IActionResult Login(LoginInfo loginInfo)
         {
             string message = string.Empty;
             if (ModelState.IsValid)
             {
-                string userId = "breadone";
-                string password = "123456";
-
-                if(loginInfo.UserId.Equals(userId) && loginInfo.Password.Equals(password))
+                if(_user.MatchTheUserInfo(loginInfo))
                 {
                     TempData["Message"] = "로그인에 성공했습니다.";
                     return RedirectToAction("Index", "Membership");
@@ -43,8 +49,6 @@ namespace NetCore.Web.Controllers
 
             ModelState.AddModelError(string.Empty, message);
             return View(loginInfo);
-        }
-        
-
+        }       
     }
 }

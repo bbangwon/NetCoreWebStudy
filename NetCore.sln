@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCore.Web", "NetCore.Web\NetCore.Web.csproj", "{5F6F99B2-5B6F-41FC-AB7C-DE13E1DC83BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCore.Web", "NetCore.Web\NetCore.Web.csproj", "{5F6F99B2-5B6F-41FC-AB7C-DE13E1DC83BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCore.Services", "NetCore.Services\NetCore.Services.csproj", "{4009A065-2942-49E1-9220-93B84428B3D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCore.Data", "NetCore.Data\NetCore.Data.csproj", "{C55BC71B-57D9-4B9D-9B53-2462CE31E503}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{5F6F99B2-5B6F-41FC-AB7C-DE13E1DC83BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F6F99B2-5B6F-41FC-AB7C-DE13E1DC83BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F6F99B2-5B6F-41FC-AB7C-DE13E1DC83BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4009A065-2942-49E1-9220-93B84428B3D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4009A065-2942-49E1-9220-93B84428B3D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4009A065-2942-49E1-9220-93B84428B3D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4009A065-2942-49E1-9220-93B84428B3D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C55BC71B-57D9-4B9D-9B53-2462CE31E503}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C55BC71B-57D9-4B9D-9B53-2462CE31E503}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C55BC71B-57D9-4B9D-9B53-2462CE31E503}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C55BC71B-57D9-4B9D-9B53-2462CE31E503}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
