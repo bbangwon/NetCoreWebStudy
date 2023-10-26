@@ -23,7 +23,7 @@ namespace NetCore.Services.Svcs
 
         private bool CheckTheUserInfo(string userId, string password)
         {
-            return GetUserInfos().Where(u => u.UserId.Equals(userId) && u.Password.Equals(password)).Any();
+            return GetUserInfos().Where(u => u.UserId!.Equals(userId) && u.Password!.Equals(password)).Any();
         }
         #endregion
 

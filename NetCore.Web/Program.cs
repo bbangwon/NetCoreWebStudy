@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using NetCore.Services.Data;
 using NetCore.Services.Interfaces;
 using NetCore.Services.Svcs;
 
@@ -6,6 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUser, UserService>();
+
+// DB접속정보, Migrations 프로젝트 지정
+builder.Services.AddDbContext<CodeFirstDbContext>(options =>
+{
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        mig => mig.MigrationsAssembly("NetCore.Migrations")
+        );
+});
 
 var app = builder.Build();
 
