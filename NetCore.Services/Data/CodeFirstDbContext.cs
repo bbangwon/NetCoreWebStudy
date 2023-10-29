@@ -11,6 +11,8 @@ namespace NetCore.Services.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserRolesByUser> UserRolesByUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,6 +20,8 @@ namespace NetCore.Services.Data
 
             //테이블명 지정
             modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<UserRole>().ToTable("UserRole");
+            modelBuilder.Entity<UserRolesByUser>().ToTable("UserRolesByUser");
 
             //복합키 지정
             modelBuilder.Entity<UserRolesByUser>().HasKey(c => new { c.UserId, c.RoleId });
