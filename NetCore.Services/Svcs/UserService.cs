@@ -54,16 +54,25 @@ namespace NetCore.Services.Svcs
             //    .Where(u => u.UserId!.Equals(userId) && u.Password!.Equals(password))
             //    .FirstOrDefault();
 
-            //FUNCTION
-            user = _dbContext.Users
-                .FromSql($"SELECT * FROM dbo.[ufnUser]({userId}, {password})")
-                .FirstOrDefault();
+            ////FUNCTION
+            //user = _dbContext.Users
+            //    .FromSql($"SELECT * FROM dbo.[ufnUser]({userId}, {password})")
+            //    .FirstOrDefault();
 
             //STORED PROCEDURE
-            //user = _dbContext.Users
-            //    .FromSql($"dbo.uspCheckLoginByUserId {userId}, {password}")
-            //    .AsEnumerable()
-            //    .FirstOrDefault();
+            user = _dbContext.Users
+                .FromSql($"dbo.uspCheckLoginByUserId {userId}, {password}")
+                .AsEnumerable()
+                .FirstOrDefault();
+
+            if(user == null)
+            {
+                int rowAffected = 0;
+                //rowAffected = _dbContext.Database.ExecuteSql($"Update dbo.[User] SET AccessFailedCount += 1 WHERE UserId={userId}");
+
+                //STORE PROCEDURE
+                rowAffected = _dbContext.Database.ExecuteSql($"dbo.FailedLoginByUserId {userId}");
+            }
 
             return user;
         }

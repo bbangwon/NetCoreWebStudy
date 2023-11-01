@@ -17,6 +17,7 @@ namespace NetCore.Data.DataModels
 
         [Required, StringLength(130), Column(TypeName = "nvarchar(130)")]
         public string Password { get; set; } = string.Empty;
+        public int AccessFailedCount { get; set; } = 0;
 
         [Required]
         public bool IsMembershipWithdrawn { get; set; }
