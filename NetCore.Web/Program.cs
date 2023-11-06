@@ -2,12 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using NetCore.Services.Data;
 using NetCore.Services.Interfaces;
 using NetCore.Services.Svcs;
+using NetCore.Utilities.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUser, UserService>();
+
+Common.SetDataProtection(builder.Services, @"C:\study\NetCore\Keys", "NetCore", Enums.CryptoType.CngCbc);
 
 // DB접속정보, Migrations 프로젝트 지정
 builder.Services.AddDbContext<CodeFirstDbContext>(options =>
