@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using NetCore.Services.Data;
 using NetCore.Services.Interfaces;
@@ -7,8 +8,19 @@ using NetCore.Utilities.Utils;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUser, UserService>();
+
+//신원보증과 승인권한
+builder.Services.AddAuthentication(defaultScheme:CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddCookie(options =>
+         {
+             options.AccessDeniedPath = "/Membership/Forbidden";
+             options.LoginPath = "/Membership/Login";        
+        });
+
+builder.Services.AddAuthorization();
 
 Common.SetDataProtection(builder.Services, @"C:\study\NetCore\Keys", "NetCore", Enums.CryptoType.CngCbc);
 
@@ -41,5 +53,8 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//신원보증만 (미들웨어 등록)
+app.UseAuthentication();
 
 app.Run();

@@ -81,6 +81,28 @@ namespace NetCore.Services.Svcs
         {
             return GetUesrInfo(userId, password) != null;
         }
+
+        private User? GetUserInfo(string userId)
+        {
+            return _dbContext.Users.Where(u => u.UserId!.Equals(userId)).FirstOrDefault();
+        }
+
+        private IEnumerable<UserRolesByUser> GetUserRolesByUserInfos(string userId)
+        {
+            var userRolesByUserInfos = _dbContext.UserRolesByUsers.Where(u => u.UserId!.Equals(userId)).ToList();
+
+            foreach (var role in userRolesByUserInfos)
+            {
+                role.UserRole = GetUserRole(role.RoleId!);
+            }
+
+            return userRolesByUserInfos.OrderByDescending(uru => uru.UserRole!.RolePriority);
+        }
+
+        private UserRole? GetUserRole(string roleId)
+        {
+            return _dbContext.UserRoles.Where(r => r.RoleId!.Equals(roleId)).FirstOrDefault();
+        }
         #endregion
 
         bool IUser.MatchTheUserInfo(LoginInfo loginInfo)
@@ -89,6 +111,15 @@ namespace NetCore.Services.Svcs
                 return false;
 
             return CheckTheUserInfo(loginInfo.UserId, loginInfo.Password);
+        }
+        User? IUser.GetUserInfo(string userId)
+        {
+            return GetUserInfo(userId);
+        }
+
+        IEnumerable<UserRolesByUser> IUser.GetRolesOwnedByUser(string userId)
+        {
+            return GetUserRolesByUserInfos(userId);
         }
     }
 }
