@@ -4,22 +4,23 @@
     ViewData["Title"] = "멤버십";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    string userName = string.Empty;
-    string[]? userRoleInfo = new[] { string.Empty, string.Empty, string.Empty};
+    string userId = string.Empty;
+    string userRoleId = string.Empty;
+    string[]? userDataInfos = new[] {string.Empty, string.Empty, string.Empty, string.Empty};
 
     if(Context.User.Claims.Any())
     {
-        userName = User.FindFirst(claim => claim.Type.Equals(ClaimTypes.Name)).Value;
-        userRoleInfo = User.FindFirst(claim => claim.Type.Equals(ClaimTypes.Role)).Value.Split('|');
-
+        userId = User.FindFirst(claim => claim.Type.Equals(ClaimTypes.Name))!.Value;
+        userRoleId = User.FindFirst(claim => claim.Type.Equals(ClaimTypes.Role))!.Value;
+        userDataInfos = User.FindFirst(claim => claim.Type.Equals(ClaimTypes.UserData))!.Value.Split('|');
     }
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <div class="text-info">@Html.Raw(@TempData["Message"])</div>
-@if(Context.User.Identity.IsAuthenticated)
+@if(Context.User.Identity!.IsAuthenticated)
 {
-    <div class="text-danger">@($"{userName}님의 권한은 {userRoleInfo[0]}{userRoleInfo[1]}")</div>
+    <div class="text-danger">@($"{userId}({userDataInfos[2]})님의 권한은 {userRoleId}")</div>
     <a asp-controller="Membership" asp-action="Logout" class="btn btn-primary">멤버십 로그아웃</a>
 }

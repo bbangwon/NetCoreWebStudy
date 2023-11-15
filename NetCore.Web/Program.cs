@@ -17,7 +17,7 @@ builder.Services.AddAuthentication(defaultScheme:CookieAuthenticationDefaults.Au
         .AddCookie(options =>
          {
              options.AccessDeniedPath = "/Membership/Forbidden";
-             options.LoginPath = "/Membership/Login";        
+             options.LoginPath = "/Membership/Login";
         });
 
 builder.Services.AddAuthorization();

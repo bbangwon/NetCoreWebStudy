@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using NetCore.Data.ViewModels;
 
 namespace NetCore.Web.Controllers
@@ -15,6 +16,7 @@ namespace NetCore.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "GeneralUser,SuperUser,SystemUser")]
         public IActionResult AES()
         {
             return View();
@@ -22,6 +24,7 @@ namespace NetCore.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "GeneralUser,SuperUser,SystemUser")]
         public IActionResult AES(AESInfo aes)
         {
             string message = string.Empty;           
