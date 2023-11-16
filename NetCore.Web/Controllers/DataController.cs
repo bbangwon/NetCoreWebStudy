@@ -16,7 +16,7 @@ namespace NetCore.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "GeneralUser,SuperUser,SystemUser")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "GeneralUser, SuperUser, SystemUser")]
         public IActionResult AES()
         {
             return View();
@@ -24,7 +24,7 @@ namespace NetCore.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "GeneralUser,SuperUser,SystemUser")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "GeneralUser, SuperUser, SystemUser")]
         public IActionResult AES(AESInfo aes)
         {
             string message = string.Empty;           

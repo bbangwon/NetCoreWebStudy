@@ -78,7 +78,7 @@ namespace NetCore.Migrations.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("UserRole");
+                    b.ToTable("UserRole", (string)null);
                 });
 
             modelBuilder.Entity("NetCore.Data.DataModels.UserRolesByUser", b =>
@@ -98,7 +98,7 @@ namespace NetCore.Migrations.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRolesByUser");
+                    b.ToTable("UserRolesByUser", (string)null);
                 });
 
             modelBuilder.Entity("NetCore.Data.DataModels.UserRolesByUser", b =>

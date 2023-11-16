@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUser, UserService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 //신원보증과 승인권한
 builder.Services.AddAuthentication(defaultScheme:CookieAuthenticationDefaults.AuthenticationScheme)

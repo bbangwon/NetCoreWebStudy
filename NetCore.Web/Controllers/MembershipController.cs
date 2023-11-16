@@ -9,15 +9,17 @@ using System.Security.Claims;
 
 namespace NetCore.Web.Controllers
 {
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "AssociateUser,GeneralUser,SuperUser,SystemUser")]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "AssociateUser, GeneralUser, SuperUser, SystemUser")]
     public class MembershipController : Controller
     {
         private IUser _user;
+        private IPasswordHasher _hasher;
         private HttpContext? _context;
 
-        public MembershipController(IHttpContextAccessor accessor, IUser user)
+        public MembershipController(IHttpContextAccessor accessor, IPasswordHasher hasher, IUser user)
         {
             _context = accessor.HttpContext;
+            _hasher = hasher;
             _user = user;
         }
 
@@ -65,7 +67,7 @@ namespace NetCore.Web.Controllers
             string message = string.Empty;
             if (ModelState.IsValid)
             {
-                if(_user.MatchTheUserInfo(loginInfo))
+                if (_hasher.MatchThePasswordInfo(loginInfo.UserId!, loginInfo.Password!))
                 {
                     //신원보증과 승인권한
                     var userInfo = _user.GetUserInfo(loginInfo.UserId!);

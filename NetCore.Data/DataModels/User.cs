@@ -15,8 +15,12 @@ namespace NetCore.Data.DataModels
         [Required, StringLength(320), Column(TypeName = "varchar(320)")]
         public string UserEmail { get; set; } = string.Empty;
 
-        [Required, StringLength(130), Column(TypeName = "nvarchar(130)")]
-        public string Password { get; set; } = string.Empty;
+        public string GUIDSalt { get; set; } = string.Empty;
+
+        public string RNGSalt { get; set; } = string.Empty;
+
+        public string PasswordHash { get; set; } = string.Empty;
+
         public int AccessFailedCount { get; set; } = 0;
 
         [Required]
