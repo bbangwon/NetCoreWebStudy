@@ -21,6 +21,6 @@
 <div class="text-info">@Html.Raw(@TempData["Message"])</div>
 @if(Context.User.Identity!.IsAuthenticated)
 {
-    <div class="text-danger">@($"{userId}({userDataInfos[2]})님의 권한은 {userRoleId}")</div>
+    <div class="text-danger">@($"{userId}({userDataInfos[2]})님의 권한은 {userRoleId}({userDataInfos[0]}) 입니다.")</div>
     <a asp-controller="Membership" asp-action="Logout" class="btn btn-primary">멤버십 로그아웃</a>
 }

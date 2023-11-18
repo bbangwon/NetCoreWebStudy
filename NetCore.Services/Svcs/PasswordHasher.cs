@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using NetCore.Services.Bridges;
 using NetCore.Services.Data;
 using NetCore.Services.Interfaces;
 using System.Security.Cryptography;
@@ -48,6 +49,21 @@ namespace NetCore.Services.Svcs
         {
             return GetPasswordHash(userId, password, guidSalt, rngSalt).Equals(passwordHash);
         }
+
+        private PasswordHashInfo SetPasswordInfo(string userId, string password)
+        {
+            string guidSalt = GetGUIDSalt();
+            string rngSalt = GetRNGSalt();
+
+            var passwordInfo = new PasswordHashInfo()
+            { 
+                GUIDSalt = guidSalt, 
+                RNGSalt = rngSalt, 
+                PasswordHash = GetPasswordHash(userId, password, guidSalt, rngSalt) 
+            };
+
+            return passwordInfo;
+        }
         #endregion
 
         string IPasswordHasher.GetGUIDSalt()
@@ -65,18 +81,14 @@ namespace NetCore.Services.Svcs
             return GetPasswordHash(userId, password, guidSalt, rngSalt);
         }
 
-        public bool MatchThePasswordInfo(string userId, string password)
+        bool IPasswordHasher.CheckThePasswordInfo(string userId, string password, string guidSalt, string rngSalt, string passwordHash)
         {
-            var user = _context.Users.Where(u => u.UserId.Equals(userId)).FirstOrDefault();
-            if(user == null)
-                return false;
-
-            string guidSalt = user.GUIDSalt;
-            string rngSalt = user.RNGSalt;
-            string passwordHash = user.PasswordHash;
-
             return CheckThePasswordInfo(userId, password, guidSalt, rngSalt, passwordHash);
         }
 
+        PasswordHashInfo IPasswordHasher.SetPasswordInfo(string userId, string password)
+        {
+            return SetPasswordInfo(userId, password);
+        }
     }
 }

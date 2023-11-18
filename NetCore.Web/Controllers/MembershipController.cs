@@ -56,6 +56,43 @@ namespace NetCore.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Register(string? returnUrl)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public IActionResult Register(RegisterInfo register, string? returnUrl)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            string message = string.Empty;
+            if(ModelState.IsValid)
+            {
+                //사용자 가입 서비스
+                if(_user.RegisterUser(register) > 0)
+                {
+                    TempData["Message"] = "사용자 가입이 성공적으로 이루어졌습니다.";
+                    return RedirectToAction("Login", "Membership");
+                }
+                else
+                {
+                    message = "사용자가 가입되지 않았습니다.";
+                }
+            }
+            else
+            {
+                message = "사용자 가입을 위한 정보를 올바르게 입력하세요.";
+            }
+
+            ModelState.AddModelError(string.Empty, message);
+            return View();
+        }
+
         [HttpPost]        
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
@@ -67,7 +104,7 @@ namespace NetCore.Web.Controllers
             string message = string.Empty;
             if (ModelState.IsValid)
             {
-                if (_hasher.MatchThePasswordInfo(loginInfo.UserId!, loginInfo.Password!))
+                if (_user.MatchTheUserInfo(loginInfo))
                 {
                     //신원보증과 승인권한
                     var userInfo = _user.GetUserInfo(loginInfo.UserId!);
