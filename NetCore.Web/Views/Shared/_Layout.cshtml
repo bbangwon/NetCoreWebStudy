@@ -28,6 +28,9 @@
                         @if(Context.User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Membership" asp-action="UpdateInfo">멤버십 사용자 정보수정</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Membership" asp-action="Logout">멤버십 로그아웃</a>
                             </li>
                         }

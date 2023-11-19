@@ -106,14 +106,15 @@ namespace NetCore.Services.Svcs
             return _dbContext.UserRoles.Where(r => r.RoleId!.Equals(roleId)).FirstOrDefault();
         }
 
+        //아이디에 대해서 대소문자 처리
         private int RegisterUser(RegisterInfo register)
         {
-            var passwordInfo = _hasher.SetPasswordInfo(register.UserId, register.Password);
             var utcNow = DateTime.UtcNow;
+            var passwordInfo = _hasher.SetPasswordInfo(register.UserId, register.Password);
 
             var user = new User()
             {
-                UserId = register.UserId,
+                UserId = register.UserId.ToLower(),
                 UserName = register.UserName,
                 UserEmail = register.UserEmail,
                 GUIDSalt = passwordInfo.GUIDSalt,
@@ -126,7 +127,7 @@ namespace NetCore.Services.Svcs
 
             var userRolesByUser = new UserRolesByUser()
             {
-                UserId = register.UserId,
+                UserId = register.UserId.ToLower(),
                 RoleId = "AssociateUser",
                 OwnedUtcDate = utcNow
             };
@@ -136,6 +137,63 @@ namespace NetCore.Services.Svcs
 
             return _dbContext.SaveChanges();
         }
+
+        private UserInfo GetUserInfoForUpdate(string userId)
+        {
+            var user = GetUserInfo(userId);
+            var userInfo = new UserInfo()
+            {
+                UserId = null,
+                Password = null,
+                UserName = user!.UserName,
+                UserEmail = user!.UserEmail,
+                ChangeInfo = new ChangeInfo()
+                {
+                    UserName = user!.UserName,
+                    UserEmail = user!.UserEmail
+                }
+            };
+
+            return userInfo;
+        }
+
+        private int UpdateUser(UserInfo user)
+        {
+            var userInfo = _dbContext.Users.Where(u => u.UserId.Equals(user.UserId)).FirstOrDefault();
+            if (userInfo == null)
+                return 0;
+
+            bool check = _hasher.CheckThePasswordInfo(user.UserId!, user.Password!, userInfo.GUIDSalt, userInfo.RNGSalt, userInfo.PasswordHash);
+
+            int rowAffected = 0;
+
+            if(check)
+            {
+                _dbContext.Update(userInfo);
+
+                userInfo.UserName = user.UserName;
+                userInfo.UserEmail = user.UserEmail;
+
+                rowAffected = _dbContext.SaveChanges();
+            }
+
+            return rowAffected;
+        }
+
+        private bool MatchTheUserInfo(LoginInfo loginInfo)
+        {
+            var user = _dbContext.Users.Where(u => u.UserId.Equals(loginInfo.UserId)).FirstOrDefault();
+            if (user == null)
+                return false;
+
+            return _hasher.CheckThePasswordInfo(loginInfo.UserId!, loginInfo.Password!, user.GUIDSalt, user.RNGSalt, user.PasswordHash);
+        }
+
+        private bool CompareInfo(UserInfo user)
+        {
+            return user.ChangeInfo!.Equals(user);
+        }
+
         #endregion
 
         bool IUser.MatchTheUserInfo(LoginInfo loginInfo)
@@ -145,12 +203,7 @@ namespace NetCore.Services.Svcs
 
             //return CheckTheUserInfo(loginInfo.UserId, loginInfo.Password);
 
-            var user = _dbContext.Users.Where(u => u.UserId.Equals(loginInfo.UserId)).FirstOrDefault();
-            if (user == null)
-                return false;
-
-            return _hasher.CheckThePasswordInfo(loginInfo.UserId!, loginInfo.Password!, user.GUIDSalt, user.RNGSalt, user.PasswordHash);
-
+            return MatchTheUserInfo(loginInfo);
         }
         User? IUser.GetUserInfo(string userId)
         {
@@ -165,6 +218,21 @@ namespace NetCore.Services.Svcs
         int IUser.RegisterUser(RegisterInfo register)
         {
             return RegisterUser(register);
+        }
+
+        UserInfo IUser.GetUserInfoForUpdate(string userId)
+        {
+            return GetUserInfoForUpdate(userId);
+        }
+
+        int IUser.UpdateUser(UserInfo user)
+        {
+            return UpdateUser(user);
+        }
+
+        bool IUser.CompareInfo(UserInfo user)
+        {
+            return CompareInfo(user);
         }
     }
 }

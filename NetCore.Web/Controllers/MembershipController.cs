@@ -152,6 +152,52 @@ namespace NetCore.Web.Controllers
             return View("Login", loginInfo);
         }
 
+        [HttpGet]
+        public IActionResult UpdateInfo()
+        {
+            UserInfo user = _user.GetUserInfoForUpdate(_context!.User.Identity!.Name!);   //서비스
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateInfo(UserInfo user)
+        {
+            string message = string.Empty;
+            if(ModelState.IsValid)
+            {
+                //변경대상 값들을 비교 서비스
+                if(_user.CompareInfo(user))
+                {
+                    message = "하나 이상의 값이 변경되어야 정보수정이 가능합니다.";
+                    ModelState.AddModelError(string.Empty, message);
+                    return View(user);
+                }
+
+                //정보수정 서비스
+                if(_user.UpdateUser(user) > 0)
+                {
+                    TempData["Message"] = "사용자 정보수정이 성공적으로 이루어졌습니다.";
+                    return RedirectToAction("UpdateInfo", "Membership");
+                }
+                else
+                {
+                    message = "사용자 정보가 수정되지 않았습니다.";
+                }
+
+            }
+            else
+            {
+                message = "사용자 정보수정을 위한 정보를 올바르게 입력하세요.";
+            }
+
+            ModelState.AddModelError(string.Empty, message);
+            return View(user);
+        }
+
+
+
         public async Task<IActionResult> LogoutAsync()
         {
             await _context!.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
