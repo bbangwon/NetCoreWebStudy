@@ -194,6 +194,24 @@ namespace NetCore.Services.Svcs
             return user.ChangeInfo!.Equals(user);
         }
 
+        private int WithdrawnUser(WithdrawnInfo user)
+        {
+            var userInfo = _dbContext.Users.Where(u => u.UserId.Equals(user.UserId)).FirstOrDefault();
+            if (userInfo == null)
+                return 0;
+
+            bool check = _hasher.CheckThePasswordInfo(user.UserId!, user.Password!, userInfo.GUIDSalt, userInfo.RNGSalt, userInfo.PasswordHash);
+            int rowAffected = 0;
+
+            if (check)
+            {
+                _dbContext.Remove(userInfo);
+                rowAffected = _dbContext.SaveChanges();
+            }
+
+            return rowAffected;
+        }
+
         #endregion
 
         bool IUser.MatchTheUserInfo(LoginInfo loginInfo)
@@ -233,6 +251,11 @@ namespace NetCore.Services.Svcs
         bool IUser.CompareInfo(UserInfo user)
         {
             return CompareInfo(user);
+        }
+
+        int IUser.WithdrawnUser(WithdrawnInfo user)
+        {
+            return WithdrawnUser(user);
         }
     }
 }

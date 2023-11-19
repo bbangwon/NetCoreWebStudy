@@ -4,13 +4,15 @@ namespace NetCore.Data.ViewModels
 {
     public class ChangeInfo
     {
-        [Required(ErrorMessage = "사용자 이름을 입력하세요.")]
-        [Display(Name = "사용자 이름")]
+        /// <summary>
+        /// 사용자 이름
+        /// </summary>
         public required string UserName { get; set; }
 
+        /// <summary>
+        /// 사용자 이메일
+        /// </summary>
         [DataType(DataType.EmailAddress)]
-        [Required(ErrorMessage = "사용자 이메일을 입력하세요.")]
-        [Display(Name = "사용자 이메일")]
         public required string UserEmail { get; set; }
 
         /// <summary>
