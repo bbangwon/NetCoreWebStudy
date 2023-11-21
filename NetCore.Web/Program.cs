@@ -35,6 +35,21 @@ builder.Services.AddDbContext<CodeFirstDbContext>(options =>
         );
 });
 
+builder.Logging.AddFile(options =>
+{
+    options.LogDirectory = "Logs";  //로그저장폴더
+    options.FileName = "log-";      //로그파일접두어 log-20231121.txt
+    options.FileSizeLimit = null;   //로그파일최대크기 (기본 10MB)
+    options.RetainedFileCountLimit = null; //로그파일보유갯수 (기본 2개)
+});
+
+//로그파일 작성
+builder.Services.AddLogging(logging => {
+    logging.AddConfiguration(builder.Configuration.GetSection(key: "Logging"));
+    logging.AddConsole();
+    logging.AddDebug();
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
