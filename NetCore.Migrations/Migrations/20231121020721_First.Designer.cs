@@ -12,8 +12,8 @@ using NetCore.Services.Data;
 namespace NetCore.Migrations.Migrations
 {
     [DbContext(typeof(CodeFirstDbContext))]
-    [Migration("20231026215947_AddingUserTables")]
-    partial class AddingUserTables
+    [Migration("20231121020721_First")]
+    partial class First
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,13 @@ namespace NetCore.Migrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GUIDSalt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsMembershipWithdrawn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -39,10 +46,13 @@ namespace NetCore.Migrations.Migrations
                     b.Property<DateTime>("JoinedUtcDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasMaxLength(130)
-                        .HasColumnType("nvarchar(130)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RNGSalt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserEmail")
                         .IsRequired()
@@ -81,7 +91,7 @@ namespace NetCore.Migrations.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("UserRole");
+                    b.ToTable("UserRole", (string)null);
                 });
 
             modelBuilder.Entity("NetCore.Data.DataModels.UserRolesByUser", b =>
@@ -101,7 +111,7 @@ namespace NetCore.Migrations.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRolesByUser");
+                    b.ToTable("UserRolesByUser", (string)null);
                 });
 
             modelBuilder.Entity("NetCore.Data.DataModels.UserRolesByUser", b =>

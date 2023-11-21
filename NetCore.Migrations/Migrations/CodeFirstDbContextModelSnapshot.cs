@@ -28,6 +28,13 @@ namespace NetCore.Migrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GUIDSalt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsMembershipWithdrawn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -36,10 +43,13 @@ namespace NetCore.Migrations.Migrations
                     b.Property<DateTime>("JoinedUtcDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasMaxLength(130)
-                        .HasColumnType("nvarchar(130)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RNGSalt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserEmail")
                         .IsRequired()

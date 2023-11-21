@@ -12,6 +12,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUser, UserService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<DbFirstDbInitializer>();
 
 //신원보증과 승인권한
 builder.Services.AddAuthentication(defaultScheme:CookieAuthenticationDefaults.AuthenticationScheme)
@@ -57,5 +58,13 @@ app.MapControllerRoute(
 
 //신원보증만 (미들웨어 등록)
 app.UseAuthentication();
+
+//초기데이터 등록
+using var scope = app.Services.CreateScope();
+var dbInitializer = scope.ServiceProvider
+    .GetRequiredService<DbFirstDbInitializer>();
+
+int rowAffected = dbInitializer.PlantSeedData();
+
 
 app.Run();

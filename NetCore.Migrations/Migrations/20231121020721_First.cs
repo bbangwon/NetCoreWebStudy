@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NetCore.Migrations.Migrations
 {
     /// <inheritdoc />
-    public partial class AddingUserTables : Migration
+    public partial class First : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,10 @@ namespace NetCore.Migrations.Migrations
                     UserId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UserEmail = table.Column<string>(type: "varchar(320)", maxLength: 320, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(130)", maxLength: 130, nullable: false),
+                    GUIDSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RNGSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false),
                     IsMembershipWithdrawn = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     JoinedUtcDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
