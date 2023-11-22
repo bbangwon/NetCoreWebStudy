@@ -50,6 +50,13 @@ builder.Services.AddLogging(logging => {
     logging.AddDebug();
 });
 
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = "NetCore.Session";
+    //세션 제한시간(기본값 20분)
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -73,6 +80,9 @@ app.MapControllerRoute(
 
 //신원보증만 (미들웨어 등록)
 app.UseAuthentication();
+
+//세션 지정
+app.UseSession();
 
 //초기데이터 등록
 using var scope = app.Services.CreateScope();
